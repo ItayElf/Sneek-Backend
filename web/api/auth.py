@@ -69,6 +69,8 @@ def user_data():
     request_ip = request.remote_addr
     user = User.query.filter_by(ip=request_ip).first()
     if not user or is_token_expired(user.token):
+        if user:
+            database.session.delete(user)
         create_new_user(request_ip)
         user = User.query.filter_by(ip=request_ip).first()
     return jsonify(user.serialized)
