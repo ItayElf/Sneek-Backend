@@ -1,19 +1,7 @@
 """
 The main file
 """
-import pathlib
-
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-
-home_directory = pathlib.Path(__file__).parent.absolute()
-
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{home_directory / 'sneek.db'}"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
+from web.base import app, database
 
 
 @app.route("/")
@@ -23,8 +11,8 @@ def hello_world():
 
 def main():
     with app.app_context():
-        db.drop_all()
-        db.create_all()
+        database.drop_all()
+        database.create_all()
     app.run()
 
 
