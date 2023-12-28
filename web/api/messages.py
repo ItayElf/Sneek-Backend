@@ -21,8 +21,8 @@ class Message(database.Model):
     expired_at = database.Column(database.DateTime(timezone=True), server_default=func.now(), nullable=False)
     message_type = database.Column(database.Text, nullable=False)
     content = database.Column(database.Text, nullable=False)
-    channel = database.Column(database.Text, database.ForeignKey('channel.name'), nullable=True)
-    sent_by = database.Column(database.Text, database.ForeignKey('user.name'), nullable=True)
+    channel = database.Column(database.Text, database.ForeignKey('channel.name'), nullable=False)
+    sent_by = database.Column(database.Text, database.ForeignKey('user.name'), nullable=False)
 
     def serialize(self):
         result = {c: getattr(self, c) for c in inspect(self).attrs.keys()}
