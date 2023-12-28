@@ -16,13 +16,21 @@ class Channel(database.Model):
     name = database.Column(database.String(100), primary_key=True)
     max_participants = database.Column(database.Integer)
 
+    def get_connected_participants(self) -> int:
+        """
+        Returns how many users are currently connected to this channel
+        """
+        return len(User.query.filter_by(connected_to=self.name).all())
+
     def serialize(self) -> Dict[str, Any]:
         """
         Serializes the channel and returns its data as a dict
         """
-        users_in_channel = User.query.filter_by(connected_to=self.name).all()
-        return {"name": self.name, "max_participants": self.max_participants,
-                "connected_participants": len(users_in_channel)}
+        return {
+            "name": self.name,
+            "max_participants": self.max_participants,
+            "connected_participants": self.get_connected_participants()
+        }
 
     @classmethod
     def from_json(cls, data: Dict[str, Any]):
@@ -62,6 +70,10 @@ def join_channel():
     channel = Channel.query.filter_by(name=channel_name).first()
     if not channel:
         return f"Channel {channel_name} does not exists", 404
+    if channel.max_participants is not None and channel.get_connected_participants() >= channel.max_participants:
+        return "Channel is full", 400
+    if user.connected_to == channel.name:
+        return "Already connected to channel", 400
     user.connected_to = channel_name
     database.session.commit()
     return "", 200
