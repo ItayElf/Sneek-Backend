@@ -4,6 +4,7 @@ A file for the configuration of the Sneek backend
 import json
 import pathlib
 from dataclasses import dataclass
+from typing import Any, Dict
 
 from typing_extensions import List
 
@@ -16,6 +17,7 @@ class Configuration:
     A class that holds the data for the Sneek configuration
     """
     session_duration_in_hours: int
+    channels: List[Dict[str, Any]]
     name_adjectives: List[str]
     name_animals: List[str]
 

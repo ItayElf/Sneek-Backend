@@ -1,7 +1,8 @@
 """
 The main file
 """
-from web.base import app, database
+from web import create_channels
+from web.base import app, database, CONFIGURATION
 
 
 @app.route("/")
@@ -13,6 +14,7 @@ def main():
     with app.app_context():
         database.drop_all()
         database.create_all()
+        create_channels(CONFIGURATION.channels)
     app.run()
 
 

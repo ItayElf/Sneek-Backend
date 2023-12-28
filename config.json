@@ -1,5 +1,11 @@
 {
   "session_duration_in_hours": 24,
+  "channels": [
+    {
+      "name": "kbEq6GD4It1IgaXL3jJa",
+      "max_participants": null
+    }
+  ],
   "name_adjectives": [
     "adorable",
     "adventurous",
