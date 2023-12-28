@@ -3,6 +3,7 @@
   "channels": [
     {
       "name": "kbEq6GD4It1IgaXL3jJa",
+      "message_duration": 60,
       "max_participants": null
     }
   ],

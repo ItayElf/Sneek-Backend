@@ -14,6 +14,7 @@ class Channel(database.Model):
     A class that represents a channel in the app
     """
     name = database.Column(database.String(100), primary_key=True)
+    message_duration = database.Column(database.Integer, nullable=False)
     max_participants = database.Column(database.Integer)
 
     def get_connected_participants(self) -> int:
@@ -28,6 +29,7 @@ class Channel(database.Model):
         """
         return {
             "name": self.name,
+            "message_duration": self.message_duration,
             "max_participants": self.max_participants,
             "connected_participants": self.get_connected_participants()
         }
