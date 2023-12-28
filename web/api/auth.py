@@ -25,8 +25,7 @@ class User(database.Model):
     token = database.Column(database.String(100), nullable=False)
     connected_to = database.Column(database.String(100), database.ForeignKey('channel.name'), nullable=True)
 
-    @property
-    def serialized(self) -> Dict[str, Any]:
+    def serialize(self) -> Dict[str, Any]:
         """
         Returns the user as a dict
         """
@@ -73,4 +72,4 @@ def user_data():
             database.session.delete(user)
         create_new_user(request_ip)
         user = User.query.filter_by(ip=request_ip).first()
-    return jsonify(user.serialized)
+    return jsonify(user.serialize())
