@@ -20,10 +20,10 @@ class User(database.Model):
     """
     A user of the app
     """
-    ip = database.Column(database.String(50), primary_key=True)
-    name = database.Column(database.String(100), nullable=False, unique=True)
-    token = database.Column(database.String(100), nullable=False)
-    connected_to = database.Column(database.String(100), database.ForeignKey('channel.name'), nullable=True)
+    ip = database.Column(database.Text, primary_key=True)
+    name = database.Column(database.Text, nullable=False, unique=True)
+    token = database.Column(database.Text, nullable=False)
+    connected_to = database.Column(database.Text, database.ForeignKey('channel.name'), nullable=True)
 
     def serialize(self) -> Dict[str, Any]:
         """

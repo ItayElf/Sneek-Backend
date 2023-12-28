@@ -13,7 +13,7 @@ class Channel(database.Model):
     """
     A class that represents a channel in the app
     """
-    name = database.Column(database.String(100), primary_key=True)
+    name = database.Column(database.Text, primary_key=True)
     message_duration = database.Column(database.Integer, nullable=False)
     max_participants = database.Column(database.Integer)
 
