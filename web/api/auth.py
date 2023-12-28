@@ -23,6 +23,7 @@ class User(database.Model):
     ip = database.Column(database.String(50), primary_key=True)
     name = database.Column(database.String(100), nullable=False, unique=True)
     token = database.Column(database.String(100), nullable=False)
+    connected_to = database.Column(database.String(100), database.ForeignKey('channel.name'), nullable=True)
 
     @property
     def serialized(self) -> Dict[str, Any]:
