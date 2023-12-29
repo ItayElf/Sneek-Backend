@@ -38,7 +38,7 @@ def is_token_expired(token: str) -> bool:
     """
     Returns whether the given token is expired
     """
-    decoded_token = decode_token(token)
+    decoded_token = decode_token(token, allow_expired=True)
     expiration_time = decoded_token["exp"]
     current_time = datetime.now().timestamp()
 

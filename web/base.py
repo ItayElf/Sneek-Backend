@@ -26,3 +26,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 database = SQLAlchemy(app)
 jwt = JWTManager(app)
+
+
+@jwt.expired_token_loader
+def my_expired_token_callback(*_):
+    return "Session is expired. Try to refresh the page.", 401
