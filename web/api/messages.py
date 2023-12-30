@@ -1,11 +1,11 @@
 """
 A file for handling messages in channels
 """
-import datetime
+import time
 
 from flask import jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from sqlalchemy import func, inspect
+from sqlalchemy import inspect
 
 from web import database, app, User, Channel
 
@@ -17,8 +17,8 @@ class Message(database.Model):
     Supported message types: "text"
     """
     id = database.Column(database.Integer, primary_key=True, autoincrement=True)
-    sent_at = database.Column(database.DateTime(timezone=True), server_default=func.now(), nullable=False)
-    expired_at = database.Column(database.DateTime(timezone=True), server_default=func.now(), nullable=False)
+    sent_at = database.Column(database.Integer, nullable=False)
+    expired_at = database.Column(database.Integer, nullable=False)
     message_type = database.Column(database.Text, nullable=False)
     content = database.Column(database.Text, nullable=False)
     channel = database.Column(database.Text, database.ForeignKey('channel.name'), nullable=False)
@@ -33,7 +33,7 @@ class Message(database.Model):
 @app.route("/api/messages")
 @jwt_required()
 def get_messages():
-    now = datetime.datetime.now()
+    now = time.time()
     username = get_jwt_identity()
     user = User.query.filter_by(name=username).first()
     if not user:
@@ -58,8 +58,8 @@ def write_text_messages():
     if not content:
         return "Cannot send a message without any content", 400
     channel = Channel.query.filter_by(name=user.connected_to).first()
-    now = datetime.datetime.now()
-    expired = now + datetime.timedelta(seconds=channel.message_duration)
+    now = time.time()
+    expired = now + channel.message_duration
     message = Message(sent_at=now, expired_at=expired, message_type="text", content=content, channel=channel.name,
                       sent_by=username)
     database.session.add(message)
