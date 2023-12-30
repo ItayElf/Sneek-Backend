@@ -1,14 +1,14 @@
 {
-  "session_duration_in_hours": 24,
+  "session_duration_in_hours": 4,
   "channels": [
     {
       "name": "kbEq6GD4It1IgaXL3jJa",
-      "message_duration": 60,
+      "message_duration": 30,
       "max_participants": null
     },
     {
       "name": "ef5b98bd9121cd0103c4",
-      "message_duration": 30,
+      "message_duration": 10,
       "max_participants": 25
     }
   ],
