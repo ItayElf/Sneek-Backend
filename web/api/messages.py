@@ -41,7 +41,7 @@ def get_messages():
     if user.connected_to is None:
         return "User is not connected to a channel", 400
     messages = Message.query.filter_by(channel=user.connected_to).filter(Message.expired_at > now).order_by(
-        Message.sent_at).all()
+        Message.sent_at.desc()).all()
     return jsonify([message.serialize() for message in messages])
 
 
