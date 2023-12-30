@@ -7,8 +7,8 @@
     <list default="true" id="90960c02-50d7-476c-91a5-e46b214397e8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sneek.db" beforeDir="false" afterPath="$PROJECT_DIR$/sneek.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/api/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/api/auth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/api/channels.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/api/channels.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/api/messages.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/api/messages.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -61,6 +61,14 @@ def get_channels():
     return jsonify([channel.serialize() for channel in channels])
 
 
+@app.route("/api/channel/<name>")
+def get_channel(name: str):
+    channel = Channel.query.filter_by(name=name).first()
+    if not channel:
+        return "Channel not found", 404
+    return jsonify(channel.serialize())
+
+
 @app.route("/api/channels/join", methods=["POST"])
 @jwt_required()
 def join_channel():

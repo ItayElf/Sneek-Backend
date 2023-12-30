@@ -27,7 +27,6 @@ class Message(database.Model):
     def serialize(self):
         result = {c: getattr(self, c) for c in inspect(self).attrs.keys()}
         del result["channel"]
-        del result["id"]
         return result
 
 
@@ -41,7 +40,8 @@ def get_messages():
         return f"User {username} was not found", 404
     if user.connected_to is None:
         return "User is not connected to a channel", 400
-    messages = Message.query.filter_by(channel=user.connected_to).filter(Message.expired_at > now).all()
+    messages = Message.query.filter_by(channel=user.connected_to).filter(Message.expired_at > now).order_by(
+        Message.sent_at).all()
     return jsonify([message.serialize() for message in messages])
 
 
