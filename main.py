@@ -15,7 +15,7 @@ def main():
         database.drop_all()
         database.create_all()
         create_channels(CONFIGURATION.channels)
-    app.run()
+    app.run(host="0.0.0.0")
 
 
 if __name__ == '__main__':
