@@ -96,8 +96,6 @@ def leave_channel():
     user = User.query.filter_by(name=username).first()
     if not user:
         return f"User {username} was not found", 404
-    if user.connected_to is None:
-        return f"User is not connected to a channel", 400
     user.connected_to = None
     database.session.commit()
     return "", 200
