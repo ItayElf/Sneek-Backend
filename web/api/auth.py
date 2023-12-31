@@ -4,9 +4,11 @@ A file for authentication
 Since Sneek does not have proper authentication, this file handles the auto-generated names by ip
 and their session length. This is done by a JWT token and a record in the database
 """
+import hashlib
 import random
+import string
 from datetime import datetime
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from flask import request, jsonify
 from flask_jwt_extended import decode_token, create_access_token
@@ -51,11 +53,12 @@ def create_new_user(ip: str):
 
     :param ip: the ip of the client
     """
+    ip_hash = hashlib.md5((ip + random.choice(string.printable)).encode("utf-8")).hexdigest()
     while True:
         try:
             name = f"{random.choice(CONFIGURATION.name_adjectives)} {random.choice(CONFIGURATION.name_animals)}"
             token = create_access_token(identity=name)
-            user = User(ip=ip, name=name, token=token)
+            user = User(ip=ip_hash, name=name, token=token)
             database.session.add(user)
             database.session.commit()
             return
@@ -63,13 +66,24 @@ def create_new_user(ip: str):
             pass  # Try to find a username that is not taken
 
 
+def get_user(ip: str) -> Optional[User]:
+    """
+    Returns a user with the given ip
+
+    :param ip: the ip of the desired user
+    :return: the user or None if it does not exist
+    """
+    hashes = [hashlib.md5((ip + pepper).encode("utf-8")).hexdigest() for pepper in string.printable]
+    return User.query.filter(User.ip.in_(hashes)).first()
+
+
 @app.route("/api/user_data")
 def user_data():
     request_ip = request.remote_addr
-    user = User.query.filter_by(ip=request_ip).first()
+    user = get_user(request_ip)
     if not user or is_token_expired(user.token):
         if user:
             database.session.delete(user)
         create_new_user(request_ip)
-        user = User.query.filter_by(ip=request_ip).first()
+        user = get_user(request_ip)
     return jsonify(user.serialize())
