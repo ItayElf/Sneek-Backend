@@ -7,6 +7,7 @@ from flask import jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import inspect
 
+from encyption import AESCipher
 from web import database, app, User, Channel
 
 
@@ -20,14 +21,22 @@ class Message(database.Model):
     sent_at = database.Column(database.Integer, nullable=False)
     expired_at = database.Column(database.Integer, nullable=False)
     message_type = database.Column(database.Text, nullable=False)
-    content = database.Column(database.Text, nullable=False)
+    content = database.Column(database.LargeBinary, nullable=False)
     channel = database.Column(database.Text, database.ForeignKey('channel.name'), nullable=False)
     sent_by = database.Column(database.Text, database.ForeignKey('user.name'), nullable=False)
 
     def serialize(self):
         result = {c: getattr(self, c) for c in inspect(self).attrs.keys()}
         del result["channel"]
+        result["content"] = get_cypher().decrypt(result["content"]).decode("utf-8")
         return result
+
+
+def get_cypher():
+    """
+    Returns the cipher with the correct key
+    """
+    return AESCipher(app.config["SECRET"])
 
 
 @app.route("/api/messages")
@@ -60,7 +69,9 @@ def write_text_messages():
     channel = Channel.query.filter_by(name=user.connected_to).first()
     now = time.time()
     expired = now + channel.message_duration
-    message = Message(sent_at=now, expired_at=expired, message_type="text", content=content, channel=channel.name,
+    encrypted_content = get_cypher().encrypt(content.encode("utf-8"))
+    message = Message(sent_at=now, expired_at=expired, message_type="text", content=encrypted_content,
+                      channel=channel.name,
                       sent_by=username)
     database.session.add(message)
     database.session.commit()

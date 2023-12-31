@@ -20,6 +20,7 @@ CONFIGURATION = Configuration.load()
 
 app = Flask(__name__, static_folder=str(_STATIC_FOLDER), static_url_path="/")
 
+app.config["SECRET"] = secrets.token_bytes(16)
 app.config["JWT_SECRET_KEY"] = secrets.token_hex()
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=CONFIGURATION.session_duration_in_hours)
 
