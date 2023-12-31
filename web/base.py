@@ -5,7 +5,6 @@ This file is needed so that the app and the database could be accessible in othe
 """
 import os
 import pathlib
-import secrets
 from datetime import timedelta
 
 from flask import Flask, send_from_directory
@@ -13,6 +12,7 @@ from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
 
 from web.configuration import Configuration
+from web.hidden import APP_SECRET, JWT_SECRET
 
 _DATABASE_LOCATION = pathlib.Path(__file__).parent.parent / "sneek.db"
 _STATIC_FOLDER = pathlib.Path(__file__).parent.parent / "static"
@@ -20,8 +20,8 @@ CONFIGURATION = Configuration.load()
 
 app = Flask(__name__, static_folder=str(_STATIC_FOLDER), static_url_path="/")
 
-app.config["SECRET"] = secrets.token_bytes(16)
-app.config["JWT_SECRET_KEY"] = secrets.token_hex()
+app.config["SECRET"] = APP_SECRET
+app.config["JWT_SECRET_KEY"] = JWT_SECRET
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=CONFIGURATION.session_duration_in_hours)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{_DATABASE_LOCATION}"
